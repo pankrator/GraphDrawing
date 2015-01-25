@@ -18,8 +18,11 @@ GraphManager.prototype.draw = function (graph, context) {
 	var list = graph.list;
 	for(var i = 0; i < list.length; i++) {
 		context.beginPath();
-		context.strokeStyle = list[i].color ? list[i].color : "blue";
-		context.fillStyle = list[i].color ? list[i].color : "white";
+		if (list[i].fill) {
+			context.fillStyle = list[i].color ? list[i].color : "white";
+		} else {
+			context.strokeStyle = list[i].color ? list[i].color : "blue";
+		}
 		context.arc(list[i].x, list[i].y, list[i].radius, 0, Math.PI * 2);
 
 		if (list[i].fill) {

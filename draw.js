@@ -2,10 +2,11 @@ var context, canvas;
 var canvasBoundaries;
 
 var selectNodeForIteration = false;
+var iteratorMessage = null;
 
 var graphManager = new GraphManager();
 var graph = graphManager.createNewEmptyGraph(new ForceBasedGraphController());
-var iterator = new BFSIterator(graph);
+var iterator;
 
 var graphComponents = {
 	firstNode: null,
@@ -27,10 +28,18 @@ window.onload = function () {
 	canvas.addEventListener("mouseup", mouseUpListener);
 	canvas.addEventListener("contextmenu", contextMenuListener);
 	
-	var bfsButton = document.getElementById("BFS");
+	var bfsButton = document.getElementById("BFSButton");
 	bfsButton.onclick = function () {
 		iterator = new BFSIterator(graph);
 		selectNodeForIteration = true;
+		iteratorMessage = "Select node to start BFS";
+	};
+
+	var dfsButton = document.getElementById("DFSButton");
+	dfsButton.onclick = function () {
+		iterator = new DFSIterator(graph);
+		selectNodeForIteration = true;
+		iteratorMessage = "Select node to start DFS";
 	};
 
 	context.font = "normal 20px Arial";
@@ -79,8 +88,11 @@ var mouseClickListener = function (ev) {
 }
 
 var mouseMoveListener = function (ev) {
+	var doc = document.documentElement;
+
+	var top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
 	mouse.x = ev.x - canvasBoundaries.left;
-	mouse.y = ev.y - canvasBoundaries.top;
+	mouse.y = ev.y - canvasBoundaries.top + top;
 }
 
 var keyboardListener = function (ev) {
@@ -110,7 +122,7 @@ var update = function () {
 
 	if (selectNodeForIteration) {
 		context.fillStyle = "red";
-		context.fillText("Choose node for BFS", mouse.x, mouse.y - 10);
+		context.fillText(iteratorMessage, mouse.x, mouse.y - 10);
 	}
 
 	setTimeout(update, 30);
